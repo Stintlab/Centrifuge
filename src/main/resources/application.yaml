@@ -1,0 +1,25 @@
+logging:
+  level:
+    root: WARN
+    de.stintlab: INFO
+management:
+  server:
+    port: 8090
+  endpoints:
+    access:
+      default: NONE
+    web:
+      exposure:
+        include: "health"
+    endpoint:
+      health:
+        access: READ_ONLY
+      probes:
+        enbaled: true
+spring:
+  application:
+    name: Centrifuge
+  webflux:
+    basePath: /v1.0/
+  profiles:
+    active: local
