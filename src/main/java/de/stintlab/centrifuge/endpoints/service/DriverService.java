@@ -3,7 +3,6 @@ package de.stintlab.centrifuge.endpoints.service;
 import de.stintlab.centrifuge.endpoints.model.DriverDto;
 import de.stintlab.centrifuge.endpoints.model.DriverPutDto;
 import de.stintlab.centrifuge.repository.PlanMongoRepository;
-import de.stintlab.centrifuge.repository.entities.DriverEntity;
 import lombok.AccessLevel;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

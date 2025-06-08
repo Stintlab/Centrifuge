@@ -5,7 +5,6 @@ import de.stintlab.centrifuge.endpoints.service.PlanService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.CustomLog;
@@ -17,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 @CustomLog
 @RestController
 @RequiredArgsConstructor

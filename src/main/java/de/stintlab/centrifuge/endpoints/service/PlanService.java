@@ -55,6 +55,4 @@ public class PlanService {
                 .build())
             .map(saved -> saved.getPlanId().toString());
     }
-    
-    private static class UuidTakenException extends RuntimeException {}
 }

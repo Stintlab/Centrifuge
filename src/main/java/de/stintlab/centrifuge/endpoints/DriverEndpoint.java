@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 @CustomLog
 @RestController
 @RequiredArgsConstructor
