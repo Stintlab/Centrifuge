@@ -2,13 +2,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version "$springBootVersion"
     id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
+    id 'com.google.cloud.tools.jib' version "$jibVersion"
 }
 
 group = 'de.StintLab'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -21,6 +22,11 @@ configurations {
 repositories {
     mavenCentral()
 }
+
+bootJar {
+    enabled = true
+}
+
 
 dependencies {
     compileOnly 'org.projectlombok:lombok'

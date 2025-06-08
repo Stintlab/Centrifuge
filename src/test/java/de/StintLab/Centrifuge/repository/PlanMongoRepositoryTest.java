@@ -1,7 +1,7 @@
 package de.StintLab.Centrifuge.repository;
 
 import de.StintLab.Centrifuge.testconfig.EnableMongoDbTestcontainer;
-import de.stintlab.centrifuge.repository.PlanReactiveMongoRepository;
+import de.stintlab.centrifuge.repository.PlanMongoRepository;
 import de.stintlab.centrifuge.repository.entities.DriverEntity;
 import de.stintlab.centrifuge.repository.entities.PlanEntity;
 import de.stintlab.centrifuge.repository.entities.RaceEntity;
@@ -23,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @SpringBootTest
 @SpringJUnitConfig
 @EnableMongoDbTestcontainer
-class PlanReactiveMongoRepositoryTest {
+class PlanMongoRepositoryTest {
     
     @Autowired
-    PlanReactiveMongoRepository planReactiveMongoRepository;
+    PlanMongoRepository planMongoRepository;
     
     @Autowired
     ReactiveMongoTemplate reactiveMongoTemplate;
@@ -54,7 +54,7 @@ class PlanReactiveMongoRepositoryTest {
             .race(race)
             .build();
         
-        var mono = planReactiveMongoRepository.save(plan);
+        var mono = planMongoRepository.save(plan);
         var saved = assertDoesNotThrow(() -> mono.block());
         assertThat(saved).isEqualTo(plan);
     }
@@ -85,7 +85,7 @@ class PlanReactiveMongoRepositoryTest {
         var saveMono = reactiveMongoTemplate.save(plan);
         assertDoesNotThrow(() -> saveMono.block());
         
-        var fetchMono = planReactiveMongoRepository.findById(plan.getPlanId());
+        var fetchMono = planMongoRepository.findById(plan.getPlanId());
         var db = assertDoesNotThrow(() -> fetchMono.block());
         assertThat(db).isEqualTo(plan);
     }

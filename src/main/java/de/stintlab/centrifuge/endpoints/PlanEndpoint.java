@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class PlanEndpoint {
     @Operation(method = "GET", summary = "get the entire race plan")
     @GetMapping(value = GET_PLAN_ENDPOINT_URL, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public Mono<PlanDto> getPlan(@PathVariable @NotBlank UUID planId) {
+    public Mono<PlanDto> getPlan(@PathVariable @NotNull UUID planId) {
         return planService.getPlan(planId);
     }
     

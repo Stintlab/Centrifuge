@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -23,9 +22,11 @@ public class PlanEntity {
     
     @Id
     UUID planId;
-    Set<DriverEntity> drivers;
     RaceEntity race;
-    Set<StintEntity> stints;
+    @Builder.Default
+    Set<DriverEntity> drivers = new HashSet<>();
+    @Builder.Default
+    List<StintEntity> stints = new ArrayList<>();
     
     @Builder.Default
     @EqualsAndHashCode.Exclude

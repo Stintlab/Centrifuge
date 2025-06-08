@@ -10,12 +10,14 @@ management:
       default: NONE
     web:
       exposure:
-        include: "health"
-    endpoint:
-      health:
-        access: READ_ONLY
-      probes:
-        enbaled: true
+        include: "health,prometheus"
+  endpoint:
+    health:
+      access: READ_ONLY
+    prometheus:
+      access: READ_ONLY
+    probes:
+      enbaled: true
 spring:
   application:
     name: Centrifuge

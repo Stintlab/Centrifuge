@@ -4,8 +4,7 @@ import de.stintlab.centrifuge.endpoints.model.DriverDto;
 import de.stintlab.centrifuge.endpoints.model.PlanDto;
 import de.stintlab.centrifuge.endpoints.model.RaceDto;
 import de.stintlab.centrifuge.endpoints.model.StintDto;
-import de.stintlab.centrifuge.repository.PlanReactiveMongoRepository;
-import de.stintlab.centrifuge.repository.entities.DriverEntity;
+import de.stintlab.centrifuge.repository.PlanMongoRepository;
 import de.stintlab.centrifuge.repository.entities.PlanEntity;
 import lombok.AccessLevel;
 import lombok.CustomLog;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,16 +22,18 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PlanService {
     
-    PlanReactiveMongoRepository planReactiveMongoRepository;
+    PlanMongoRepository planMongoRepository;
     
     public Mono<PlanDto> getPlan(UUID id) {
-        return planReactiveMongoRepository.findById(id)
+        return planMongoRepository.findById(id)
             .map(planEntity -> {
                 var drivers = planEntity.getDrivers().stream()
                     .map(e -> Map.entry(e.getDriverId(), DriverDto.fromEntity(e)))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                 
-                var race = RaceDto.fromEntity(planEntity.getRace());
+                var race = Optional.ofNullable(planEntity.getRace())
+                    .map(RaceDto::fromEntity)
+                    .orElse(null);
                 
                 var stints = planEntity.getStints().stream()
                     .map(e -> StintDto.fromEntityAndDriverDto(e, drivers.get(e.getDriverId())))
@@ -41,7 +41,7 @@ public class PlanService {
                     .toList();
                 
                 return PlanDto.builder()
-                    .drivers(new ArrayList<>(drivers.values()))
+                    .drivers(drivers.values())
                     .race(race)
                     .stints(stints)
                     .build();
@@ -49,7 +49,7 @@ public class PlanService {
     }
     
     public Mono<String> createPlan(){
-        return planReactiveMongoRepository.save(
+        return planMongoRepository.save(
             PlanEntity.builder()
                 .planId(UUID.randomUUID())
                 .build())

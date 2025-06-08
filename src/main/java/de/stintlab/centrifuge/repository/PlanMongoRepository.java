@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import java.util.UUID;
 
-public interface PlanReactiveMongoRepository extends ReactiveMongoRepository<PlanEntity, UUID> {
+public interface PlanMongoRepository extends ReactiveMongoRepository<PlanEntity, UUID> {
 }
