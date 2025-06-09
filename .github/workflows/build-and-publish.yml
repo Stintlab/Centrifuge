@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: compile, test and publish to docker hub
 on:
   push:
     branches: [ "main" ]
@@ -15,7 +15,13 @@ jobs:
     permissions:
       contents: read
     steps:
-    - uses: actions/checkout@v4
+    - name: Git checkout
+      uses: actions/checkout@v4
+    - name: Identify version
+      run: |
+        version=$(head -n 1 gradle.properties | sed 's/version\s*=\s*//')
+        echo "version=${version" >> "$GITHUB_ENV"
+        echo $version
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -26,7 +32,20 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
     - name: Build with Gradle Wrapper
-      run: ./gradlew build bootJar jibBuildTar
+      run: ./gradlew build bootJar
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_USER_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: "stintlab/centrifuge:latest,stintlab/centrifuge:{{ $env.version }}"
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:
@@ -42,3 +61,14 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+  check-all-good:
+    if: always()
+    needs:
+      - build-and-publish
+      - dependency-submission
+    runs-on: Ubuntu-latest
+    steps:
+      - name: Decide whether all the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

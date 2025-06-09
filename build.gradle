@@ -2,10 +2,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version "$springBootVersion"
     id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
-    id 'com.google.cloud.tools.jib' version "$jibVersion"
 }
 
-group = 'de.StintLab'
+group = 'de.stintlab'
 
 java {
     toolchain {
@@ -23,10 +22,17 @@ repositories {
     mavenCentral()
 }
 
-bootJar {
+tasks.named("bootJar") {
     enabled = true
 }
 
+tasks.named("jar") {
+    enabled = false
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
+}
 
 dependencies {
     compileOnly 'org.projectlombok:lombok'
@@ -48,8 +54,4 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mongodb'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named("test") {
-    useJUnitPlatform()
 }

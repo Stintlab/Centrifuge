@@ -3,7 +3,7 @@ networks:
     driver: bridge
 services:
   centrifuge:
-    image: centrifuge:1.0.0
+    image: centrifuge:latest
     restart: always
     container_name: centrifuge
     networks:
